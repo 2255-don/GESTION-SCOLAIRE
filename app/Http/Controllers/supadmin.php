@@ -145,5 +145,13 @@ class supadmin extends Controller
     //   }
 
     // }
+
+    // chart
+    public function fechtdata(){
+        $users = User::select('id', 'nom', 'prenom', 'email', 'password', 'profils_id', 'etudiants_id', 'enseignants_id')
+                       ->with(['profil', 'etudiant', 'enseignant'])
+                       ->get();
+        return response()->json($users);
+    }
 }
 

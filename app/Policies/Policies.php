@@ -15,7 +15,7 @@ class Policies
     */
 
      public function viewProfile(User $user) {
-                dd('superadmin');
+                // dd('superadmin');
 
         return $user->profil->libelle == 'superadmin'; // Assurez-vous que le champ 'role' existe dans votre modèle User
     }

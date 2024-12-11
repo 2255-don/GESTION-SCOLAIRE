@@ -65,21 +65,26 @@ class AdminNoteController extends Controller
                 // ->whereColumn('bulletins.notes_id', 'notes.id')
                 ->distinct()
                 ->get();
-    foreach($cours as $cour){
-        $sommeNote =  $cour->note + $cour->notes;
-        $notegen = $sommeNote / 2;
-
-        $note = Note::find($cour->noteId);
-        $note->notegen = $notegen;
-        $note->save();
+    $moyennes = Moyenne::all();
+    foreach($moyennes as $moyenne){
+        if($moyenne->etudiants_id != $id){
+            foreach($cours as $cour){
+                // calcule et insertion de la notegen dans la table note
+                $sommeNote =  $cour->note + $cour->notes;
+                $notegen = $sommeNote / 2;
+                $note = Note::find($cour->noteId);
+                $note->notegen = $notegen;
+                $note->save();
+            }
+            //   calcule et isertion de la moyenne dans la table moyenne
+            $notes = Note::where('etudiants_id', $id)->pluck('notegen');
+            $moyenne = $notes->avg();
+            $moyennes = new Moyenne();
+            $moyennes->moyenne = $moyenne;
+            $moyennes->etudiants_id = $id;
+            $moyennes->save();
+        }
     }
-
-    $notes = Note::where('etudiants_id', $id)->pluck('notegen');
-    $moyenne = $notes->avg();
-    $moyennes = new Moyenne();
-    $moyennes->moyenne = $moyenne;
-    $moyennes->etudiants_id = $id;
-    $moyennes->save();
 
     $bulletin = Note::select('notes.note1', 'notes.note2', 'notes.notegen', 'cours.nom as corname', 'users.nom', 'users.prenom', 'etudiants.matricule', 'moyennes.moyenne')
                       ->join('cours', 'cours.id', '=', 'notes.cours_id')
@@ -93,8 +98,21 @@ class AdminNoteController extends Controller
                       ->get();
 
     return view('admin.show_bulletin', compact('bulletin'));
+    }
 
+    public function showBulletin(Request $request, $id){
+    $periode = $request->session()->get('periode');
+        $bulletin = Note::select('notes.note1', 'notes.note2', 'notes.notegen', 'cours.nom as corname', 'users.nom', 'users.prenom', 'etudiants.matricule', 'moyennes.moyenne')
+                      ->join('cours', 'cours.id', '=', 'notes.cours_id')
+                      ->join('etudiants', 'etudiants.id', '=', 'notes.etudiants_id')
+                      ->join('users', 'etudiants.id', '=', 'users.etudiants_id')
+                      ->join('bulletins', 'bulletins.notes_id', '=', 'notes.id')
+                      ->join('moyennes', 'etudiants.id', '=', 'moyennes.etudiants_id')
+                      ->where('bulletins.periode', '=', $periode)
+                      ->where('etudiants.id', '=', $id)
+                      ->distinct()
+                      ->get();
 
-
+    return view('admin.show_bulletin', compact('bulletin'));
     }
 }

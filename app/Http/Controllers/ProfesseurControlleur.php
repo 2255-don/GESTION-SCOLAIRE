@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Bulletin;
 use App\Models\Cour;
@@ -22,9 +23,9 @@ class ProfesseurControlleur extends Controller
    public function choixFiliere(Request $request){
     $periode = request('periode');
     $periode = $request->session()->put('periode', $periode);
-    $idProfesseur = auth()->user()->enseignants_id;
+    $idProfesseur = Auth::user()->enseignants_id;
 
-    $idProfesseur = auth()->user()->enseignants_id;
+    $idProfesseur = Auth::user()->enseignants_id;
 
     $filiere = Filiere::select('filieres.id as filiereId', 'filieres.nom', 'filieres.niveau')
                         ->join('planings', 'planings.filieres_id', '=', 'filieres.id')
@@ -40,7 +41,7 @@ class ProfesseurControlleur extends Controller
 
    public function note( Request $request,  $id = null){
     $periode = $request->session()->get('periode');
-    $idProfesseur = auth()->user()->enseignants_id;
+    $idProfesseur = Auth::user()->enseignants_id;
                     //   dd($periode, $idProfesseur);
 
     $note = $id ? Note::select('notes.id as noteId', 'notes.note1 as note', 'notes.note2 as notes', 'cours.id as courId', 'cours.nom as courname', 'cours.statut', 'filieres.nom as filiere', 'filieres.id as filiereId','filieres.niveau', 'usersEtudiant.nom', 'usersEtudiant.prenom', 'etudiants.matricule', 'enseignants.matricule', 'inscriptions.satut', 'etudiants.matricule', 'etudiants.id', 'bulletins.periode as periode')

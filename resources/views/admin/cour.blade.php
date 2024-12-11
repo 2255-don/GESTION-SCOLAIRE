@@ -10,12 +10,12 @@
 
 <div class="container">
     <div class="row g-3 d-flex flex-inline">
-        <div class="col-6">
+        <div class="col-lg-4">
             <h2>Liste des utilisateurs</h2>
             <table class="table table-bordered"
                    id="table"
                    data-toggle="table"
-                   data-pagination="true"
+                   {{-- data-pagination="true" --}}
                    data-search="true"
                    data-sortable="true">
                 <thead>
@@ -53,7 +53,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-6">
+        <div class="col-md-4 offset-md-1 mt-5">
             <form action="{{route('user.courStore')}}" method="post">
                 @csrf
                 <input type="hidden" name="id" value="{{$cour->id ?? ''}}">

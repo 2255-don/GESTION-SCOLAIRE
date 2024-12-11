@@ -74,9 +74,10 @@ Route::get('/etudiants/{filiere}', [App\Http\Controllers\ProfesseurControlleur::
 Route::get('/note-details/{noteId}', [App\Http\Controllers\ProfesseurControlleur::class, 'noteEtudiant']);
 
 //gestion bulletin admin
-Route::get('admin/bulletin/form', [\App\Http\Controllers\AdminNoteController::class, 'choixFiliere']);
+Route::get('admin/bulletin/form', [\App\Http\Controllers\AdminNoteController::class, 'choixFiliere'])->name('admin.Bulletin');
 Route::post('admin/bulletin/etudiant', [\App\Http\Controllers\AdminNoteController::class, 'infoEtudiant'])->name('admin.infoEtudiant');
 Route::get('admin/bulletin/etudiant/show/{id}', [\App\Http\Controllers\AdminNoteController::class, 'bulletin'])->name('admin.show-bulletin');
 
-
+//chart
+Route::get('/fetchdata', [App\Http\controllers\supadmin::class, 'fechtdata']);
 

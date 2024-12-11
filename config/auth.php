@@ -39,6 +39,9 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+            'redirects' => [
+                'login' => 'user.login'
+            ]
         ],
     ],
 
